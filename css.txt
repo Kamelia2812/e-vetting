@@ -1,0 +1,118 @@
+/* --- UNIVERSAL VARIABLES --- */
+:root {
+    --bg: #f6f7fb;
+    --card: #fff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --primary: #111827;
+    --accent: #0284c7; /* Your Blue button color */
+    --shadow: 0 10px 20px rgba(0,0,0,.06);
+    --r: 14px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* --- AUTH PAGES (Login/Signup) Specific --- */
+.auth-body {
+    background: linear-gradient(135deg, #06b6d4, #2563eb);
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+}
+
+/* --- CARDS & GRIDS --- */
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    padding: 20px;
+}
+
+.auth-card {
+    width: 520px;
+    max-width: 92vw;
+}
+
+/* --- NAVBAR STYLES --- */
+header {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.bar {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+nav { display: flex; gap: 8px; flex: 1; overflow: auto; }
+
+.nav-btn {
+    border: 1px solid var(--border);
+    background: #fff;
+    border-radius: 12px;
+    padding: 9px 11px;
+    font-weight: 800;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.nav-btn.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+/* --- BUTTONS & INPUTS --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-weight: 900;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #f9fafb;
+    font-size: 14px;
+}
+
+/* --- USER INFO --- */
+.avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid var(--border); display: grid;
+    place-items: center; background: #f3f4f6; font-weight: 900;
+}
+
+.logout {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid var(--border); display: grid; place-items: center;
+    text-decoration: none; color: #374151; background: #fff;
+}
+.logout:hover { background: #fee2e2; color: #991b1b; }
