@@ -65,35 +65,35 @@ public class EventServlet extends HttpServlet {
                 return;
             }
             
+            if ("update".equals(act)) {
+                int eventId = Integer.parseInt(req.getParameter("id"));
+                String title = req.getParameter("title");
+                String dateStr = req.getParameter("date");
+                String timeStr = req.getParameter("time");
+                String course = req.getParameter("course");
+                
+                Date eventDate = parseDateTime(dateStr, timeStr);
+                
+                Event e = new Event();
+                e.setEventId(eventId);
+                e.setTitle(title);
+                e.setEventDate(eventDate);
+                e.setCourseName(course);
+                e.setCreatedBy((Integer) session.getAttribute("userId"));
+                
+                EventDAO dao = new EventDAO();
+                dao.updateEvent(e);
+                
+                resp.sendRedirect(req.getContextPath() + "/calendar.jsp");
+                return;
+            }
+            
             String title = req.getParameter("title");
             String dateStr = req.getParameter("date");
             String timeStr = req.getParameter("time");
             String course = req.getParameter("course");
             
-            Date eventDate = null;
-            String dateTimeStr = dateStr + " " + (timeStr != null && !timeStr.isEmpty() ? timeStr : "00:00");
-            
-            String[] formats = {
-                "yyyy-MM-dd HH:mm",
-                "yyyy-MM-dd hh:mm a",
-                "dd/MM/yyyy HH:mm",
-                "dd/MM/yyyy hh:mm a",
-                "yyyy-MM-dd",
-                "dd/MM/yyyy"
-            };
-            
-            for (String format : formats) {
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat(format);
-                    eventDate = sdf.parse(dateTimeStr);
-                    break;
-                } catch (Exception parseEx) {
-                    // Try next format
-                }
-            }
-            if (eventDate == null) {
-                throw new Exception("Unparseable date: " + dateTimeStr);
-            }
+            Date eventDate = parseDateTime(dateStr, timeStr);
             
             Event e = new Event();
             e.setTitle(title);
@@ -114,5 +114,33 @@ public class EventServlet extends HttpServlet {
     private String escapeJson(String s) {
         if (s == null) return "";
         return s.replace("\\", "\\\\").replace("\"", "\\\"");
+    }
+    
+    private Date parseDateTime(String dateStr, String timeStr) throws Exception {
+        Date eventDate = null;
+        String dateTimeStr = dateStr + " " + (timeStr != null && !timeStr.isEmpty() ? timeStr : "00:00");
+        
+        String[] formats = {
+            "yyyy-MM-dd HH:mm",
+            "yyyy-MM-dd hh:mm a",
+            "dd/MM/yyyy HH:mm",
+            "dd/MM/yyyy hh:mm a",
+            "yyyy-MM-dd",
+            "dd/MM/yyyy"
+        };
+        
+        for (String format : formats) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat(format);
+                eventDate = sdf.parse(dateTimeStr);
+                break;
+            } catch (Exception parseEx) {
+                // Try next format
+            }
+        }
+        if (eventDate == null) {
+            throw new Exception("Unparseable date: " + dateTimeStr);
+        }
+        return eventDate;
     }
 }

@@ -50,4 +50,16 @@ public class EventDAO {
             ps.executeUpdate();
         }
     }
+
+    public void updateEvent(Event event) throws Exception {
+        String sql = "UPDATE events SET title = ?, event_date = ?, course_name = ? WHERE event_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, event.getTitle());
+            ps.setTimestamp(2, new Timestamp(event.getEventDate().getTime()));
+            ps.setString(3, event.getCourseName());
+            ps.setInt(4, event.getEventId());
+            ps.executeUpdate();
+        }
+    }
 }

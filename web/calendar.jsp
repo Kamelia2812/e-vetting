@@ -134,6 +134,42 @@
     </div>
 </div>
 
+<!-- Edit Modal -->
+<div class="modal" id="editEventModal">
+    <div class="modal-content">
+        <h3>Edit Event</h3>
+        <form method="post" action="<%= ctx %>/EventServlet">
+            <input type="hidden" name="action" value="update">
+            <input type="hidden" name="id" id="editModalId">
+            <div class="form-group">
+                <label>Event Title</label>
+                <input type="text" name="title" id="editModalTitle" required>
+            </div>
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" name="date" id="editModalDate" required>
+            </div>
+            <div class="form-group">
+                <label>Time (optional)</label>
+                <input type="time" name="time" id="editModalTime">
+            </div>
+            <div class="form-group">
+                <label>Course Name</label>
+                <select name="course" id="editModalCourse" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit;">
+                    <option value="">-- No specific course --</option>
+                    <% for(Course c : courses) { %>
+                        <option value="<%= c.getCourseName() %>"><%= c.getCourseCode() %> - <%= c.getCourseName() %></option>
+                    <% } %>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                <button type="submit" class="btn-new-event">Update Event</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <jsp:include page="footer.jsp" />
 
 <script>
@@ -200,11 +236,14 @@
                         </div>
                         <div class="event-card-footer" style="display:flex; justify-content:space-between;">
                             <a href="#">Add submission</a>
-                            \${isKP ? `<form method="post" action="<%= ctx %>/EventServlet" style="display:inline;" onsubmit="return confirm('Delete this event?');">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="id" value="\${e.id}">
-                                <button type="submit" style="background:none; border:none; color:#dc2626; cursor:pointer; font-weight:600;"><i class="bi bi-trash3"></i> Delete</button>
-                            </form>` : ''}
+                            \${isKP ? `<div style="display:inline-flex; gap:15px;">
+                                <button type="button" onclick="openEditModal('\${e.id}', '\${e.title.replace(/'/g, "\\'")}', '\${eDate.getFullYear()}-\${String(eDate.getMonth()+1).padStart(2, '0')}-\${String(eDate.getDate()).padStart(2, '0')}', '\${String(eDate.getHours()).padStart(2, '0')}:\${String(eDate.getMinutes()).padStart(2, '0')}', '\${e.course ? e.course.replace(/'/g, "\\'") : ''}')" style="background:none; border:none; color:#2563eb; cursor:pointer; font-weight:600;"><i class="bi bi-pencil"></i> Edit</button>
+                                <form method="post" action="<%= ctx %>/EventServlet" style="display:inline;" onsubmit="return confirm('Delete this event?');">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="id" value="\${e.id}">
+                                    <button type="submit" style="background:none; border:none; color:#dc2626; cursor:pointer; font-weight:600;"><i class="bi bi-trash3"></i> Delete</button>
+                                </form>
+                            </div>` : ''}
                         </div>
                     `;
                     listEl.appendChild(card);
@@ -227,6 +266,19 @@
     
     function closeEventModal() {
         document.getElementById('eventModal').classList.remove('open');
+    }
+    
+    function openEditModal(id, title, date, time, course) {
+        document.getElementById('editModalId').value = id;
+        document.getElementById('editModalTitle').value = title;
+        document.getElementById('editModalDate').value = date;
+        document.getElementById('editModalTime').value = time;
+        document.getElementById('editModalCourse').value = course;
+        document.getElementById('editEventModal').classList.add('open');
+    }
+    
+    function closeEditModal() {
+        document.getElementById('editEventModal').classList.remove('open');
     }
     
     document.addEventListener('DOMContentLoaded', renderDayView);
